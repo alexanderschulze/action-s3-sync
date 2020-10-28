@@ -61,6 +61,11 @@ EOF
   echo "aws s3 sync ${FROM_PATH} ${DEST_PATH}"
   aws s3 sync ${FROM_PATH} ${DEST_PATH} ${OPTIONS}
 
+  if [ "${CLOUDFRONT_ID}" != "" ]; then
+      echo "aws cloudfront create-invalidation ${CLOUDFRONT_ID}"
+      aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_ID} --paths "/*"
+  fi
+
   if [ "${CF_RESET}" == "true" ]; then
     # s3://bucket/path
     if [[ "${DEST_PATH:0:5}" == "s3://" ]]; then
